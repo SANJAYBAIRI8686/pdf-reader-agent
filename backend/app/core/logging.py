@@ -1,7 +1,8 @@
 import logging
 import sys
-# pyrefly: ignore [missing-import]
+# pyright: ignore [reportMissingImports]
 import structlog
+# pyright: ignore [reportMissingImports]
 from app.core.config import settings
 
 def setup_logging() -> None:

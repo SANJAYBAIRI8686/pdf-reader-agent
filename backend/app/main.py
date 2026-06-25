@@ -60,6 +60,9 @@ app.include_router(auth_router, prefix=f"{settings.API_V1_STR}/auth", tags=["Aut
 from app.api.v1.documents import router as documents_router
 app.include_router(documents_router, prefix=f"{settings.API_V1_STR}/documents", tags=["Documents"])
 
+from app.api.v1.chat import router as chat_router
+app.include_router(chat_router, prefix=f"{settings.API_V1_STR}/chat", tags=["Chat"])
+
 @app.get("/health", tags=["Health"])
 def health_check():
     """

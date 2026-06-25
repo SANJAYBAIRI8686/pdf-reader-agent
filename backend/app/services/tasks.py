@@ -69,7 +69,16 @@ def parse_and_index_document(doc_id: int) -> None:
         else:
             doc.summary = cleaned_text
             
-        # 4. Mark status as processed
+        # 4. Generate vector embeddings and store in ChromaDB
+        from app.rag.vectorstore import VectorStoreManager
+        VectorStoreManager.index_document_text(
+            text=extracted_text,
+            doc_id=doc.id,
+            user_id=doc.user_id,
+            filename=doc.filename
+        )
+            
+        # 5. Mark status as processed
         doc.status = "processed"
         db.add(doc)
         db.commit()

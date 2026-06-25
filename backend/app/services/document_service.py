@@ -105,7 +105,11 @@ class DocumentService:
             logger.error("Failed to delete physical file", path=doc.filepath, error=str(e))
             # Continue database deletion so the system doesn't stay out of sync
             
-        # 2. Delete DB record
+        # 2. Delete vectors from ChromaDB
+        from app.rag.vectorstore import VectorStoreManager
+        VectorStoreManager.delete_document_vectors(doc_id=doc.id)
+            
+        # 3. Delete DB record
         try:
             db.delete(doc)
             db.commit()

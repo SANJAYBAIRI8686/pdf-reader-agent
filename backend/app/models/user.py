@@ -1,4 +1,5 @@
 from sqlalchemy import Boolean, Column, DateTime, Integer, String, func
+from sqlalchemy.orm import relationship
 from app.database.base import Base
 
 class User(Base):
@@ -16,3 +17,6 @@ class User(Base):
     # Audit Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+
+    # Relationships
+    documents = relationship("Document", back_populates="user", cascade="all, delete-orphan")

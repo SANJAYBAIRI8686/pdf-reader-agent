@@ -1,0 +1,17 @@
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.env
+.env.example
+research_assistant.db
+uploaded_files
+chroma_data
+.git
+.github
+.pytest_cache
+.vscode
+.idea
+Dockerfile
+.dockerignore

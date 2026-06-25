@@ -1,0 +1,47 @@
+services:
+  # Python FastAPI Application
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ai_research_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_NAME=AI Research Assistant
+      - APP_ENV=production
+      - DEBUG=false
+      # Use an absolute SQLite database path inside the persistent Docker volume
+      - DATABASE_URL=sqlite:////app/data/research_assistant.db
+      - UPLOAD_DIR=/app/uploaded_files
+      - CHROMA_DB_DIR=/app/chroma_data
+      # Read secret keys from host environment (.env file at root or system environment variables)
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - JWT_SECRET=${JWT_SECRET:-supersecretchangeinproduction}
+    volumes:
+      # Map host directories to preserve SQLite data, documents, and vectors across restarts
+      - ./backend/data:/app/data
+      - ./backend/uploaded_files:/app/uploaded_files
+      - ./backend/chroma_data:/app/chroma_data
+    networks:
+      - ai_network
+
+  # React Frontend served via Nginx (reverse proxy routing API calls to backend container)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ai_research_frontend
+    restart: unless-stopped
+    ports:
+      # Exposes UI on standard HTTP port 80. Feel free to map to "3000:80" if port 80 is occupied.
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - ai_network
+
+networks:
+  ai_network:
+    driver: bridge

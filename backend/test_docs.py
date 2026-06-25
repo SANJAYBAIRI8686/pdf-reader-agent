@@ -27,6 +27,10 @@ def test_document_workflow():
     try:
         existing_user = db.query(User).filter(User.email == test_email).first()
         if existing_user:
+            # Delete associated document vectors in ChromaDB first
+            from app.rag.vectorstore import VectorStoreManager
+            for doc in existing_user.documents:
+                VectorStoreManager.delete_document_vectors(doc_id=doc.id)
             db.delete(existing_user)
             db.commit()
     finally:
@@ -144,6 +148,10 @@ def test_document_workflow():
     try:
         user_record = db.query(User).filter(User.email == test_email).first()
         if user_record:
+            # Delete associated document vectors in ChromaDB first
+            from app.rag.vectorstore import VectorStoreManager
+            for doc in user_record.documents:
+                VectorStoreManager.delete_document_vectors(doc_id=doc.id)
             # Cascading deletes should remove remaining documents (doc3)
             db.delete(user_record)
             db.commit()

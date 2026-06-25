@@ -53,6 +53,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Register versioned API routers
+from app.api.v1.auth import router as auth_router
+app.include_router(auth_router, prefix=f"{settings.API_V1_STR}/auth", tags=["Auth"])
+
 @app.get("/health", tags=["Health"])
 def health_check():
     """
